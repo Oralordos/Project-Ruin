@@ -1,0 +1,2 @@
+#define Ruin_VERSION_MAJOR @Ruin_VERSION_MAJOR@
+#define Ruin_VERSION_MINOR @Ruin_VERSION_MINOR@
