@@ -1,6 +1,9 @@
 #include <cstdlib>
 #include <string>
 #include "RuinConfig.h"
+#include "GL/glew.h"
+#include "IL/il.h"
+#include "IL/ilut.h"
 #include "SDL.h"
 #include "SDL_main.h"
 #include "SDL_opengl.h"
@@ -15,10 +18,23 @@ std::string getTitleString()
 	return title;
 }
 
+void initDevIL()
+{
+	ilInit();
+	ilutInit();
+	ilutRenderer(ILUT_OPENGL);
+}
+
 int main(int argc, char* args[])
 {
+	initDevIL();
 	Window *window = new Window();
 	if (!window->initialize(getTitleString().c_str(), 640, 480, false))
+	{
+		return EXIT_FAILURE;
+	}
+	glewInit();
+	if (!GLEW_VERSION_3_3)
 	{
 		return EXIT_FAILURE;
 	}

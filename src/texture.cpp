@@ -1,4 +1,6 @@
 #include "texture.h"
+#include "IL/il.h"
+#include "IL/ilut.h"
 
 Texture::Texture() :
 textureID(0), w(0), h(0)
@@ -11,8 +13,13 @@ Texture::~Texture()
 
 bool Texture::initialize(std::string filename)
 {
-	// TODO Put in code to load the image here.
-	// TODO Put in code to record the size of the image here.
+	ILuint imageName = ilGenImage();
+	ilBindImage(imageName);
+	ilLoadImage(filename.c_str());
+	textureID = ilutGLBindTexImage();
+	w = ilGetInteger(IL_IMAGE_WIDTH);
+	h = ilGetInteger(IL_IMAGE_HEIGHT);
+	ilDeleteImage(imageName);
 	return false;
 }
 
