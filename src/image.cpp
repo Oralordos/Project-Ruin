@@ -1,20 +1,15 @@
 #include "image.h"
+#include "texture.h"
 
 Image::Image():
 tex(NULL), texLeft(0.0f), texRight(0.0f), texTop(0.0f), texBottom(0.0f)
 {}
 
-Image::~Image()
+bool Image::initialize(Texture *tex, units::Pixel x, units::Pixel y, units::Pixel w, units::Pixel h)
 {
-	tex = NULL;
-	// TODO Inform the data repository that we are done with the texture.
-}
-
-bool Image::initialize(std::string filname, units::Pixel x, units::Pixel y, units::Pixel w, units::Pixel h)
-{
-	// TODO Put in code to get the image from the data repository here.
-	units::Pixel texWidth = 0;
-	units::Pixel texHeight = 0;
+	this->tex = tex;
+	units::Pixel texWidth = tex->getWidth();
+	units::Pixel texHeight = tex->getHeight();
 	units::Scalar sx = static_cast<units::Scalar>(x);
 	units::Scalar sy = static_cast<units::Scalar>(y);
 	texLeft = sx / texWidth;

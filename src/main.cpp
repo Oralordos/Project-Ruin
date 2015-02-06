@@ -8,15 +8,10 @@
 #include "SDL_main.h"
 #include "SDL_opengl.h"
 #include "window.h"
+#include "texture.h"
+#include "image.h"
 
-std::string getTitleString()
-{
-	std::string title = "Project Ruin ";
-	title.append(std::to_string(Ruin_VERSION_MAJOR));
-	title.append(".");
-	title.append(std::to_string(Ruin_VERSION_MINOR));
-	return title;
-}
+const std::string titleString = "Project Ruin " + std::to_string(Ruin_VERSION_MAJOR) + "." + std::to_string(Ruin_VERSION_MINOR);
 
 void initDevIL()
 {
@@ -29,12 +24,22 @@ int main(int argc, char* args[])
 {
 	initDevIL();
 	Window *window = new Window();
-	if (!window->initialize(getTitleString().c_str(), 640, 480, false))
+	if (!window->initialize(titleString.c_str(), 640, 480, false))
 	{
 		return EXIT_FAILURE;
 	}
 	glewInit();
 	if (!GLEW_VERSION_3_3)
+	{
+		return EXIT_FAILURE;
+	}
+	Texture tex;
+	if (!tex.initialize("test.png"))
+	{
+		return EXIT_FAILURE;
+	}
+	Image image;
+	if (!image.initialize(&tex, 0, 0, tex.getWidth(), tex.getHeight()))
 	{
 		return EXIT_FAILURE;
 	}
@@ -55,6 +60,7 @@ int main(int argc, char* args[])
 		glClear(GL_COLOR_BUFFER_BIT);
 		window->swapBuffer();
 	}
+	tex.destroy();
 	delete window;
 	SDL_Quit();
 	return EXIT_SUCCESS;
