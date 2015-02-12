@@ -33,6 +33,11 @@ target_link_libraries (Ruin ${IL_LIBRARIES})
 target_link_libraries (Ruin ${ILUT_LIBRARIES})
 target_link_libraries (Ruin ${GLEW_LIBRARIES})
 
+add_custom_command (TARGET Ruin POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	"${PROJECT_SOURCE_DIR}/assets"
+	"${PROJECT_BINARY_DIR}/assets")
+
 if(WIN32)
 find_file(DevIL_DLL DevIL.dll
   PATH_SUFFIXES lib64 lib lib32)
@@ -64,9 +69,10 @@ add_custom_command (TARGET Ruin POST_BUILD
 	$<TARGET_FILE_DIR:Ruin>)
 endif(WIN32)
 
-install (TARGETS Ruin RUNTIME DESTINATION "bin")
+install (TARGETS Ruin RUNTIME DESTINATION ".")
+install (DIRECTORY "assets" DESTINATION ".")
 if(WIN32)
-install (FILES ${SDL2_DLL} ${DevIL_DLL} ${DevILU_DLL} ${DevILUT_DLL} ${GLEW_DLL} DESTINATION "bin")
+install (FILES ${SDL2_DLL} ${DevIL_DLL} ${DevILU_DLL} ${DevILUT_DLL} ${GLEW_DLL} DESTINATION ".")
 endif(WIN32)
 
 include (InstallRequiredSystemLibraries)

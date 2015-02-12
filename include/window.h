@@ -10,6 +10,7 @@ public:
 	Window();
 	~Window();
 	bool initialize(const char *title, units::Pixel width, units::Pixel height, bool fullscreen);
+	void destroy();
 	void swapBuffer();
 private:
 	SDL_Window *window;

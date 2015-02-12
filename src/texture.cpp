@@ -5,6 +5,11 @@ Texture::Texture() :
 textureID(0), w(0), h(0)
 {}
 
+Texture::~Texture()
+{
+	destroy();
+}
+
 bool Texture::initialize(std::string filename)
 {
 	ILuint imageID = loadImage(filename);

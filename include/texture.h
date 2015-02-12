@@ -10,6 +10,7 @@ class Texture
 {
 public:
 	Texture();
+	~Texture();
 	bool initialize(std::string filename);
 	void destroy();
 	void bindTexture() const;

@@ -10,14 +10,7 @@ window(NULL), glContext(NULL)
 
 Window::~Window()
 {
-	if (glContext != NULL)
-	{
-		SDL_GL_DeleteContext(glContext);
-	}
-	if (window != NULL)
-	{
-		SDL_DestroyWindow(window);
-	}
+	destroy();
 }
 
 bool Window::initialize(const char *title, int width, int height, bool fullscreen)
@@ -45,6 +38,20 @@ bool Window::initialize(const char *title, int width, int height, bool fullscree
 		return false;
 	}
 	return true;
+}
+
+void Window::destroy()
+{
+	if (glContext != NULL)
+	{
+		SDL_GL_DeleteContext(glContext);
+		glContext = NULL;
+	}
+	if (window != NULL)
+	{
+		SDL_DestroyWindow(window);
+		window = NULL;
+	}
 }
 
 void Window::swapBuffer()
