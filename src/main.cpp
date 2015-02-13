@@ -8,6 +8,7 @@
 #include "SDL_main.h"
 #include "SDL_opengl.h"
 #include "window.h"
+#include "texture.h"
 #include "shader.h"
 
 const std::string titleString = "Project Ruin " + std::to_string(Ruin_VERSION_MAJOR) + "." + std::to_string(Ruin_VERSION_MINOR);
@@ -47,6 +48,11 @@ int main(int argc, char* args[])
 	{
 		return EXIT_FAILURE;
 	}
+	Texture tex;
+	if (!tex.initialize("assets/images/test.png"))
+	{
+		return EXIT_FAILURE;
+	}
 	Shader shader;
 	if (!shader.loadProgram("assets/shaders/standardVertex.glsl", "assets/shaders/standardFragment.glsl"))
 	{
@@ -57,14 +63,25 @@ int main(int argc, char* args[])
 	glGenVertexArrays(1, &vertexArrayID);
 	glBindVertexArray(vertexArrayID);
 	static const GLfloat vertexBufferData[] = {
+		-1.0f, 1.0f, 0.0f,
 		-1.0f, -1.0f, 0.0f,
-		1.0f, -1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f
+		1.0f, 1.0f, 0.0f,
+		1.0f, -1.0f, 0.0f
+	};
+	static const GLfloat textureBufferData[] = {
+		0.0f, 1.0f,
+		0.0f, 0.0f,
+		1.0f, 1.0f,
+		1.0f, 0.0f
 	};
 	GLuint vertexBuffer;
 	glGenBuffers(1, &vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 9, vertexBufferData, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 12, vertexBufferData, GL_STATIC_DRAW);
+	GLuint textureBuffer;
+	glGenBuffers(1, &textureBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 8, textureBufferData, GL_STATIC_DRAW);
 	bool running = true;
 	while (running)
 	{
@@ -81,14 +98,20 @@ int main(int argc, char* args[])
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		shader.bindProgram();
+		tex.bindTexture();
 		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(0);
 		window.swapBuffer();
 	}
 	shader.destroy();
+	tex.destroy();
 	window.destroy();
 	SDL_Quit();
 	return EXIT_SUCCESS;

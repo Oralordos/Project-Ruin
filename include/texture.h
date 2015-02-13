@@ -19,7 +19,7 @@ public:
 	inline units::Pixel getHeight() const;
 private:
 	static ILuint loadImage(std::string filename);
-	void uploadToGL(ILuint imageID);
+	bool uploadToGL(ILuint imageID);
 	static void destroyImage(ILuint imageID);
 
 	GLuint textureID;
