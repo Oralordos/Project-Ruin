@@ -54,7 +54,7 @@ int main(int argc, char* args[])
 		return EXIT_FAILURE;
 	}
 	Shader shader;
-	if (!shader.loadProgram("assets/shaders/standardVertex.glsl", "assets/shaders/standardFragment.glsl"))
+	if (!shader.loadProgram("assets/shaders/standardVertex.glsl", "assets/shaders/standardFragment.glsl", "assets/shaders/standardGeometry.glsl"))
 	{
 		return EXIT_FAILURE;
 	}
@@ -63,25 +63,21 @@ int main(int argc, char* args[])
 	glGenVertexArrays(1, &vertexArrayID);
 	glBindVertexArray(vertexArrayID);
 	static const GLfloat vertexBufferData[] = {
-		-1.0f, 1.0f, 0.0f,
-		-1.0f, -1.0f, 0.0f,
-		1.0f, 1.0f, 0.0f,
-		1.0f, -1.0f, 0.0f
+		-1.0f, -1.0f,
+		1.0f, 1.0f
 	};
 	static const GLfloat textureBufferData[] = {
-		0.0f, 1.0f,
 		0.0f, 0.0f,
-		1.0f, 1.0f,
-		1.0f, 0.0f
+		1.0f, 1.0f
 	};
 	GLuint vertexBuffer;
 	glGenBuffers(1, &vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 12, vertexBufferData, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4, vertexBufferData, GL_STATIC_DRAW);
 	GLuint textureBuffer;
 	glGenBuffers(1, &textureBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 8, textureBufferData, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4, textureBufferData, GL_STATIC_DRAW);
 	bool running = true;
 	while (running)
 	{
@@ -102,10 +98,10 @@ int main(int argc, char* args[])
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
 		glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		glDrawArrays(GL_LINES, 0, 2);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(0);
 		window.swapBuffer();
